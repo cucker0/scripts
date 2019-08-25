@@ -43,7 +43,7 @@ function process() {
     logger ".ssh rsync have finish"    
 
     # uploads
-    logger "start to rsync uploads"
+    logger "uploads start to rsync"
     rsync ${RSYNC_COMMON_PARAMERS} ${USERNAME}@${HOST}::gitlab/gitlab-rails/uploads /var/opt/gitlab/gitlab-rails/
     logger "uploads rsync have finish"    
  
