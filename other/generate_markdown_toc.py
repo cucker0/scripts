@@ -108,7 +108,11 @@ class GenTOC(object):
         h4 = '#' * 4
         h5 = '#' * 5
         h6 = '#' * 6
-        for line in self.lines:
+        h1_b2 = '=='  # 一级标题另外一种写法
+        h2_b2 = '--'  # 二级标题另外一种写法
+        # for line in self.lines:
+        for i in range(self.lines):
+            line = self.lines[i]
             line_split = []
             title_leve = 0
             if line.startswith(h6):
@@ -123,9 +127,15 @@ class GenTOC(object):
             elif line.startswith(h3):
                 line_split = line.split(h3)
                 title_leve = 3
+            elif line.startswith(h2_b2):
+                line_split = [0, self.lines[i - 1]]
+                title_leve = 2
             elif line.startswith(h2):
                 line_split = line.split(h2)
                 title_leve = 2
+            elif line.startswith(h1_b2):
+                line_split = [0, self.lines[i -1]]
+                title_leve = 1
             elif line.startswith(h1):
                 line_split = line.split(h1)
                 title_leve = 1
