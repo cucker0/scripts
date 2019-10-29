@@ -111,7 +111,7 @@ class GenTOC(object):
         h1_b2 = '=='  # 一级标题另外一种写法
         h2_b2 = '--'  # 二级标题另外一种写法
         # for line in self.lines:
-        for i in range(self.lines):
+        for i in range(len(self.lines)):
             line = self.lines[i]
             line_split = []
             title_leve = 0
