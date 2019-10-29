@@ -112,6 +112,8 @@ class GenTOC(object):
         h2_b2 = '--'  # 二级标题另外一种写法
         # for line in self.lines:
         for i in range(len(self.lines)):
+            if i == 0 or (i == 1): # 跳过最前面两行
+                continue
             line = self.lines[i]
             line_split = []
             title_leve = 0
