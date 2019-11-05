@@ -54,40 +54,21 @@ class GenTOC(object):
         """处理锚点内容中的特殊字符
 
         如空格改为-
-        , ， 、 ( ) [ ] < > # ! ！? " ' “ ” ~ + ＋ : ：特殊字符直接去掉
+        ,，、()[]<>#!！?\"'“”~+＋:：%$特殊字符直接去掉
 
         :param anchor: str
             锚点内容
         :return: str
             处理后的锚点内容
         """
+        s = " ,，、()[]<>#!！?\"'“”~+＋:：%$"
         anchor = anchor.strip()
-        ret = anchor.replace(' ', '-')
-        ret = ret.replace(',', '')
-        ret = ret.replace('，', '')
-        ret = ret.replace('、', '')
-        ret = ret.replace('(', '')
-        ret = ret.replace(')', '')
-        ret = ret.replace('[', '')
-        ret = ret.replace(']', '')
-        ret = ret.replace('<', '')
-        ret = ret.replace('>', '')
-        ret = ret.replace('#', '')
-        ret = ret.replace('?', '')
-        ret = ret.replace('？', '')
-        ret = ret.replace('!', '')
-        ret = ret.replace('！', '')
-        ret = ret.replace('"', '')
-        ret = ret.replace('\'', '')
-        ret = ret.replace('“', '')
-        ret = ret.replace('”', '')
-        ret = ret.replace('~', '')
-        ret = ret.replace('+', '')
-        ret = ret.replace('＋', '')
-        ret = ret.replace(':', '')
-        ret = ret.replace('：', '')
-
-        return ret
+        for i in s:
+            if i == ' ':
+                anchor = anchor.replace(i, '-')
+            else:
+                anchor = anchor.replace(i, '')
+        return anchor
 
     def _record_title_info(self, title, title_leve):
         """记录找到的标题信息
