@@ -54,7 +54,7 @@ class GenTOC(object):
         """处理锚点内容中的特殊字符
 
         如空格改为-
-        , ， 、 ( ) [ ] < > # ! ！? " ' “ ” ~ + ＋特殊字符直接去掉
+        , ， 、 ( ) [ ] < > # ! ！? " ' “ ” ~ + ＋ : ：特殊字符直接去掉
 
         :param anchor: str
             锚点内容
@@ -84,6 +84,8 @@ class GenTOC(object):
         ret = ret.replace('~', '')
         ret = ret.replace('+', '')
         ret = ret.replace('＋', '')
+        ret = ret.replace(':', '')
+        ret = ret.replace('：', '')
 
         return ret
 
@@ -196,7 +198,7 @@ class GenTOC(object):
                 title = title.strip()
                 self._record_title_info(title, title_leve)
 
-    def insert_toc(self):
+    def _insert_toc(self):
         """向源文件头部插入目录
 
         :return: bool
@@ -218,7 +220,7 @@ class GenTOC(object):
         """
         self._find_title()
         try:
-            self.insert_toc()
+            self._insert_toc()
             status = self._save_file()
             if status:
                 print('目录已经成功生成')
