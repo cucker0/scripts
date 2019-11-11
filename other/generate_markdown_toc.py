@@ -160,7 +160,7 @@ class GenTOC(object):
         h6 = '#' * 6
         h1_b2 = '=='  # 一级标题另外一种写法，且优先于h2写法
         h2_b2 = '--'  # 二级标题另外一种写法，且优先于h1写法
-        # for line in self.lines:
+
         for i in range(len(self.lines)):
             if i == 0 or (i == 1): # 跳过最前面两行
                 continue
