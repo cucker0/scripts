@@ -158,8 +158,8 @@ class GenTOC(object):
         h4 = '#' * 4
         h5 = '#' * 5
         h6 = '#' * 6
-        h1_b2 = '=='  # 一级标题另外一种写法，且优先于h2写法
-        h2_b2 = '--'  # 二级标题另外一种写法，且优先于h1写法
+        h1_setex_reg = "^\s*[=]+$"  # ==，一级标题另外一种写法，且优先于h2写法
+        h2_setex_reg = "^\s*[-]+$"  # --，二级标题另外一种写法，且优先于h1写法
 
         for i in range(len(self.lines)):
             if i == 0 or (i == 1): # 跳过最前面两行
@@ -183,7 +183,7 @@ class GenTOC(object):
             elif line.startswith(h3):
                 line_split = line.split(h3)
                 title_leve = 3
-            elif line.startswith(h2_b2):
+            elif re.match(h2_setex_reg, line):
                 line_split = [0, self.lines[i - 1]]
                 # # 排除```开头的文本块情况
                 # if self.lines[i - 1].startswith('```'):
@@ -195,7 +195,7 @@ class GenTOC(object):
             elif line.startswith(h2):
                 line_split = line.split(h2)
                 title_leve = 2
-            elif line.startswith(h1_b2):
+            elif re.match(h1_setex_reg, line):
                 line_split = [0, self.lines[i -1]]
                 # # 排除上一行```开头的文本块情况
                 # if self.lines[i -1].startswith('```'):
