@@ -27,6 +27,7 @@ class GenTOC(object):
         self.toc = ''  # 目录内容
         self.title_info = []  # 用于记录标题信息，结构：[{'title': title, 'level': title_leve}, ]
         self.lines = []  # 接受读取文件所有行
+        self.is_in_codeblock_flag = False  # 是否进入代码块内，默认为否
 
     def _open_file(self):
         fp = open(self.file_path, "r+", encoding='utf-8')
@@ -114,6 +115,35 @@ class GenTOC(object):
                 level = i['level']
                 self.toc = '%s%s* [%s](#%s)\n' % (self.toc, ' ' * 4 * (level - highest_title_level), title, anchor)
 
+    def _is_in_codeblock(self, line_content):
+        """是否在代码块内
+
+        :param line_content: str
+            一行文本内容
+        :return: bool
+            True: 是
+            False: 否
+        """
+        line_content = line_content.strip()
+
+        # 代码块```开头行
+        if not self.is_in_codeblock_flag:
+            if line_content.startswith('```'):
+                # 一行代码块排除, 如：```  ```
+                if len(line_content) != 3:
+                    if line_content.endswith('```'):
+                        return self.is_in_codeblock_flag
+                self.is_in_codeblock_flag = True
+
+        # 已经进入代码块内，判断是否为代码块结束符，代码块结束符为'```'
+        if self.is_in_codeblock_flag:
+            if line_content == '```':
+                self.is_in_codeblock_flag = False
+            elif line_content.endswith('```') and (not line_content.endswith('\```')):
+                self.is_in_codeblock_flag = False
+
+        return self.is_in_codeblock_flag
+
     def _find_title(self):
         """查找标题
 
@@ -137,6 +167,10 @@ class GenTOC(object):
             line = self.lines[i]
             line_split = []
             title_leve = 0
+            # 行在代码块内跳过
+            if self._is_in_codeblock(line):
+                continue
+
             if line.startswith(h6):
                 line_split = line.split(h6)
                 title_leve = 6
@@ -151,24 +185,24 @@ class GenTOC(object):
                 title_leve = 3
             elif line.startswith(h2_b2):
                 line_split = [0, self.lines[i - 1]]
-                # 排除```开头的文本块情况
-                if self.lines[i - 1].startswith('```'):
-                    continue
-                # 排除上一行--开头的文本块情况，在sql文本块里为注释
-                if self.lines[i - 1].startswith('--'):
-                    continue
+                # # 排除```开头的文本块情况
+                # if self.lines[i - 1].startswith('```'):
+                #     continue
+                # # 排除上一行--开头的文本块情况，在sql文本块里为注释
+                # if self.lines[i - 1].startswith('--'):
+                #     continue
                 title_leve = 2
             elif line.startswith(h2):
                 line_split = line.split(h2)
                 title_leve = 2
             elif line.startswith(h1_b2):
                 line_split = [0, self.lines[i -1]]
-                # 排除上一行```开头的文本块情况
-                if self.lines[i -1].startswith('```'):
-                    continue
-                # 排除上一行--开头的文本块情况，在sql文本块里为注释
-                if self.lines[i -1].startswith('--'):
-                    continue
+                # # 排除上一行```开头的文本块情况
+                # if self.lines[i -1].startswith('```'):
+                #     continue
+                # # 排除上一行--开头的文本块情况，在sql文本块里为注释
+                # if self.lines[i -1].startswith('--'):
+                #     continue
                 title_leve = 1
             elif line.startswith(h1):
                 line_split = line.split(h1)
