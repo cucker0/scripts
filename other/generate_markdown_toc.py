@@ -8,8 +8,33 @@ mail: hanxiao2100@qq.com
 
 功能: 给markdown文档生成目录
 
-用法: python generate_markdown_toc.py markdown文件路径
+用法:
+=====
+    方法1(传参指定文件路径)：
+        python generate_markdown_toc.py markdown文件路径
 
+    方法2(通过弹窗选择文件)：
+        python generate_markdown_toc.py
+
+
+----------------------------------------------------------
+注意：
+## 要求python3
+
+## 报错异常
+linux上使用方法2时，报错：
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/usr/local/python_3.7.3/lib/python3.7/tkinter/__init__.py", line 36, in <module>
+    import _tkinter # If this fails your Python may not be configured for Tk
+ModuleNotFoundError: No module named '_tkinter
+
+## 解决方法
+1.先安装 tk-devel组件
+sudo apt install tk-dev  #(Ubuntu/Debian)
+yum install tk-devel -y  #(CentOS)
+
+2.再重新编译安装python3
 """
 
 import sys
@@ -245,10 +270,36 @@ class GenTOC(object):
             print(e)
 
 
+def choose_file():
+    """通过弹窗选择文件
+
+    :return: str
+        选择通过弹窗选择的文件路径
+        如果选择没有选择，返回为''
+    """
+    import os
+    import tkinter as tk
+    from tkinter.filedialog import askopenfilename
+
+    # 实例化object，建立一个主窗口
+    window = tk.Tk()
+    # 隐藏窗口
+    window.withdraw()
+
+    file_path = askopenfilename(title=u'选择文件')
+    (filename, tempfilename) = os.path.split(file_path)
+    (shotname, extension) = os.path.splitext(tempfilename)
+
+    if extension.lower() not in ('.md', 'markdown'):
+        print('请选择markdown文件')
+        return ''
+    return file_path
+
 if __name__ == '__main__':
     if len(sys.argv) >= 2:
         file_path = sys.argv[1]
+    else:
+        file_path = choose_file()
+    if len(file_path):
         gtoc = GenTOC(file_path)
         gtoc.start()
-    else:
-        print('请输入markdwon文件路径')
