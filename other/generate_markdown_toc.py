@@ -120,17 +120,21 @@ class GenTOC(object):
         """
         if len(self.title_info) == 0:
             return
-        self.toc = '# Table Of Contents\n'
 
+        #　标题级别最高的级数
         highest_title_level = 6
         # 找出标题级别最高的值
         for t in self.title_info:
             if t['level'] < highest_title_level:
                 highest_title_level = t['level']
+        if highest_title_level == 2:
+            self.toc = '## Table Of Contents\n'
+        else:
+            self.toc = '# Table Of Contents\n'
 
         # 一条目录格式：
         # 空格* [链接文本](#锚点)
-        regex = r"\s*\[(\S+)]((\S+))"  # 标题内容原本就是一个连接，对于这种标题直接保留，如：[...](...)
+        regex = r"\s*\[(\S+)]((\S+))"  # 标题内容原本就是一个链接，对于这种标题直接保留，如：[...](...)
         for i in self.title_info:
             title = i['title'].strip()
             if re.match(regex, title):
