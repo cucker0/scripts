@@ -87,7 +87,7 @@ class GenTOC(object):
         :return: str
             处理后的锚点内容
         """
-        s = " ,，、()[]<>#!！?\"'“”~+＋:：%$"
+        s = " ,，、()[]<>#!！?\"'“”~+＋:：%$\\"
         anchor = anchor.strip()
         for i in s:
             if i == ' ':
@@ -137,11 +137,12 @@ class GenTOC(object):
         regex = r"\s*\[(\S+)]((\S+))"  # 标题内容原本就是一个链接，对于这种标题直接保留，如：[...](...)
         for i in self.title_info:
             title = i['title'].strip()
+            level = i['level']
             if re.match(regex, title):
-                self.toc = self.toc + title + '\n'
+                # self.toc = self.toc + title + '\n'
+                self.toc = '%s%s* %s\n' % (self.toc, ' ' * 4 * (level - highest_title_level), title)
             else:
                 anchor = self.anchor_filter(title)
-                level = i['level']
                 self.toc = '%s%s* [%s](#%s)\n' % (self.toc, ' ' * 4 * (level - highest_title_level), title, anchor)
 
     def _is_in_codeblock(self, line_content):
